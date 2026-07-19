@@ -122,7 +122,7 @@ export default async function handler(req, res) {
   let blob;
   try {
     blob = await put(filename, csv, {
-      access: 'public',
+      access: 'private',
       contentType: 'text/csv',
       addRandomSuffix: false,
       allowOverwrite: true,
