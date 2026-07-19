@@ -1,0 +1,9 @@
+{
+  "name": "nevi-status-collector",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daily Vercel Cron Job that pulls NEVI-funded EV charging station status from the AFDC/NLR API and stores dated snapshots in Vercel Blob, for the NEVI Self-Reporting Gap project.",
+  "dependencies": {
+    "@vercel/blob": "^0.27.1"
+  }
+}

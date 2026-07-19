@@ -145,10 +145,70 @@ contribution.
 - If a fix, claim, or approach is challenged, treat it as a signal to search for
   evidence rather than defending the original position.
 
+## Progress log (updated 2026-07-19, via Cowork session)
+
+- **AFDC/NREL data pull — done.** Pulled the full ELEC-fuel AFDC dataset, filtered to
+  `funding_sources: NEVI`. 216 stations, verified complete against the API's own
+  `total_results` count. Cleaned to `nevi_stations_clean.csv` (state/network summaries
+  also built). Note: NREL was renamed "National Laboratory of the Rockies" (NLR) in
+  Dec 2025 under DOE; API base moved from `developer.nrel.gov` to `developer.nlr.gov`
+  (old domain retired May 29, 2026) — use the new base going forward.
+- **Paren state-level reliability data — done, with caveats.** Paren's own site/report
+  are largely JS-gated and couldn't be scraped programmatically; data was ultimately
+  read off a user-provided screenshot of Paren's Q2 2026 "Avg DCFC Reliability Rate by
+  State" map. 21 NEVI states covered. **4 states are medium-confidence reads (NY, MD,
+  DE, VA) and should be double-checked against the source screenshot before any exact
+  figures for those states go in the published article.** Also flagged but unresolved:
+  Paren's "Reliability Index"/"reliability rate" metric definition (Appendix B) has not
+  been reconciled against NEVI's official EV-ChART uptime formula — treat the computed
+  gap as suggestive, not a rigorous apples-to-apples compliance gap, until that's done.
+- **Beyond Uptime (arXiv 2601.10861) — read in full.** Makes a similar "annual uptime
+  is an insufficient/misleading metric" argument, via new operator-facing metrics
+  (Fault Time, Fault-Reason Time, Unreachable Time) and a "zombie charger" case study.
+  Overlaps in spirit, not in method — this project doesn't propose new operator
+  metrics; it applies the established self-report-vs-reality audit lens specifically
+  to the NEVI regulatory compliance mechanism, using public federal + third-party
+  aggregate data. Cite and differentiate explicitly in the article; don't treat the
+  novelty claim as settled without doing so.
+- **Prototype hosting — decided.** Interactive prototype: static app on Vercel,
+  iframe-embedded on jamesaksanders.com via a Custom HTML block (site is on the
+  WordPress.com Premium plan, which supports iframe/script in Custom HTML blocks).
+- **Station-level ML/agentic extension — decided and built.** Considered and ruled
+  out: (a) state-level correlation between AFDC `date_last_confirmed` staleness and
+  the Paren gap — computed, **null result** (Pearson r ranges -0.09 to -0.37 depending
+  on filtering, weak and wrong-signed vs. the hypothesis; not usable as a proxy).
+  (b) OpenChargeMap as an independent crowdsourced station-level signal — the right
+  *type* of signal (user check-ins, fault reports), but its API (`api.openchargemap.io`)
+  could not be reached from the Cowork sandbox's fetch tool in testing (empty response
+  on 4 attempts, while structurally similar AFDC/NLR calls succeeded) — flagged as a
+  possible future signal if a non-sandboxed environment can reach it, not built on.
+  Landed on: a daily scheduled pull of AFDC's own `status_code`/`updated_at` for the
+  216 NEVI stations, building a time series to detect status-flapping ("zombie
+  charger") patterns per Beyond Uptime's own diagnostic, narrowly scoped to NEVI
+  stations. Caveat to carry into the article: AFDC status data is itself
+  operator/network-submitted, not independently verified — frame this as a
+  *reporting-hygiene* signal, not a second independent uptime measurement, or it
+  undercuts the audit's rigor with this audience.
+  - Implementation: `/collector` in this repo (Vercel Function + Cron Job, deploys
+    separately from the prototype). `api/collect-status.js` pulls AFDC daily and
+    writes a dated CSV snapshot to Vercel Blob; `api/list-snapshots.js` is a public
+    read endpoint for the prototype frontend to consume. See `/collector/README.md`
+    for deploy steps. Needs a few weeks of accumulated snapshots before flapping
+    detection has anything to say — not ready in time for initial article publish;
+    treat as a "part 2" / live-artifact follow-on.
+
 ## Open decisions
 
-- Format/hosting for the interactive prototype (not yet chosen).
+- Double-check the 4 medium-confidence Paren state readings (NY, MD, DE, VA) against
+  the source screenshot before publishing exact figures.
+- Reconcile Paren's reliability-rate methodology against NEVI's official EV-ChART
+  uptime formula before stating the gap as a rigorous compliance finding.
 - Whether to attempt outreach to Paren for a data-sharing arrangement beyond published
-  aggregates, or stay strictly public-data-only.
-- Final read of the "Beyond Uptime" arXiv paper — needed before the differentiation
-  claim in the article can be finalized.
+  aggregates, or stay strictly public-data-only (current default: public-only).
+- Whether/how to revisit OpenChargeMap as a station-level independent signal once a
+  fetch path outside the Cowork sandbox is available.
+- Register a real (non-DEMO_KEY) AFDC/NLR API key at developer.nlr.gov/signup for
+  ongoing use, rather than relying on the public rate-limited key.
+- Drafting the article's fixed front-matter (regulatory hook, positioning-against-
+  prior-work, methodology) — not yet started; can proceed in parallel with prototype
+  build since it doesn't depend on prototype results.
