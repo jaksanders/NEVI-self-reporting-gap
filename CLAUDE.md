@@ -23,6 +23,37 @@ carry over between sessions or machines, this file does.
    session memory will not follow them to the next machine.
 3. Do not assume the user will remember to do this unprompted — ask directly.
 
+## Cowork session protocol
+
+Cowork has no equivalent to Claude Code's automatic project-file load — a Cowork
+session only sees this file if the user connects this repo folder and Claude reads it.
+Without that, a Cowork session starts blind and has to reconstruct state from other
+session transcripts (slow, and it happened once — see 2026-07-19 in the progress log).
+
+**At the start of a Cowork session on this project — literally the first action, before
+reading the synced Project knowledge cache, before answering any status question, before
+anything else:**
+1. Check whether this repo folder is already the session's connected workspace folder
+   (it usually is, automatically, if the user pre-selected it — no `request_cowork_directory`
+   call needed in that case). Try `Read` on this exact file path first. Only call
+   `request_cowork_directory` if that Read fails.
+2. Read this file in full. Treat it, not the synced Project knowledge cache, as the
+   source of truth — the Project cache is a separate, older mechanism that only has the
+   original scoping chat and goes stale as soon as work happens elsewhere (GitHub,
+   Vercel, local Claude Code). Do not substitute the Project cache for this file, and do
+   not reconstruct state from other session transcripts if this file is reachable —
+   that's slower and less reliable than just reading it (this was gotten wrong once,
+   2026-07-19, second Cowork session of the day: the assistant checked the stale Project
+   cache and mined other sessions' transcripts before checking whether this file was
+   already sitting in the connected folder — it was).
+
+**At the end of a Cowork session that changed anything (research, data, decisions):**
+1. Edit this file directly (Read/Write/Edit tools work fine on the connected folder)
+   to log what happened, in the Progress log / Open decisions sections below.
+2. Do not run git from Cowork's bash tool against this folder — see Environment notes
+   below for why. Hand the user a short `git add`/`commit`/`push` block for them (or
+   local Claude Code) to run instead, and say so explicitly before ending the session.
+
 ## Environment notes — Cowork vs. local Claude Code
 
 This project gets worked on from two different environments: the Cowork desktop app
@@ -212,6 +243,26 @@ contribution.
     per-deployment preview URLs, not the production domain, so this doesn't
     block the scheduled runs).
 
+## Progress log — 2026-07-19 (later same day, Cowork session #2)
+
+- **OpenChargeMap retested, still blocked — narrowed down further.** Re-hit
+  `api.openchargemap.io` fresh (no cached state from the earlier session): still an
+  empty response body, no error, no content-type — same signature as before. Also
+  tried `openchargemap.io/api/v3/poi` (no `api.` subdomain) as an alternate path: this
+  one resolves, but redirects to the site's login page rather than returning JSON, so
+  it's not a viable substitute endpoint either. Checked whether the Chrome extension
+  could route around the sandbox's network path: no browser is currently connected to
+  this account (`list_connected_browsers` returned empty), so that option isn't
+  available right now either. **Conclusion: this is not a flaky/retry-fixable issue —
+  it's specific to the `api.openchargemap.io` subdomain from Cowork's sandboxed fetch
+  tool.** Next thing to actually try (not yet done): pull OCM from local Claude Code
+  CLI on the user's laptop, which has normal unrestricted network access and isn't
+  subject to this sandbox's allowlist — or connect a Chrome browser to this account
+  and retry via the browser tools.
+- **Set up the Cowork-side session protocol** (see section above) so future Cowork
+  sessions read this file first instead of reconstructing state from other session
+  transcripts.
+
 ## Open decisions
 
 - Double-check the 4 medium-confidence Paren state readings (NY, MD, DE, VA) against
@@ -220,8 +271,10 @@ contribution.
   uptime formula before stating the gap as a rigorous compliance finding.
 - Whether to attempt outreach to Paren for a data-sharing arrangement beyond published
   aggregates, or stay strictly public-data-only (current default: public-only).
-- Whether/how to revisit OpenChargeMap as a station-level independent signal once a
-  fetch path outside the Cowork sandbox is available.
+- OpenChargeMap is blocked specifically from Cowork's sandboxed fetch tool (confirmed
+  twice now, 2026-07-19). Next attempt should be from local Claude Code CLI (normal
+  laptop network) or a Chrome browser connected to this account — not another retry
+  from Cowork's `web_fetch`.
 - Register a real (non-DEMO_KEY) AFDC/NLR API key at developer.nlr.gov/signup for
   ongoing use, rather than relying on the public rate-limited key.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-
