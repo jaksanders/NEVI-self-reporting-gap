@@ -7,11 +7,14 @@ carry over between sessions or machines, this file does.
 ## Session protocol (run this every session, no exceptions)
 
 **At the start of a session:**
-1. Run `git status`. If there are uncommitted changes, stop and show them to the user
+1. Run `claude auth status --text` and show the result to the user. If it doesn't match
+   the account they expect for this project (they use multiple Claude accounts across
+   machines), stop and ask before proceeding — do not assume it's correct.
+2. Run `git status`. If there are uncommitted changes, stop and show them to the user
    before doing anything else — they may be carried over from a different laptop.
-2. Run `git pull origin main` (or the current default branch) to sync any work done on
+3. Run `git pull origin main` (or the current default branch) to sync any work done on
    another machine.
-3. Confirm the pull succeeded (no merge conflicts) before proceeding with new work.
+4. Confirm the pull succeeded (no merge conflicts) before proceeding with new work.
 
 **At the end of a session:**
 1. Run `git status` / `git diff` and summarize what changed.
@@ -19,6 +22,25 @@ carry over between sessions or machines, this file does.
    — explicitly mention that this is required before switching laptops, since local
    session memory will not follow them to the next machine.
 3. Do not assume the user will remember to do this unprompted — ask directly.
+
+## Environment notes — Cowork vs. local Claude Code
+
+This project gets worked on from two different environments: the Cowork desktop app
+(sandboxed Linux shell, connected to this folder via a cross-OS mount) and Claude Code
+CLI running natively in this repo on the user's laptop.
+
+**Division of labor:**
+- Content work (drafting the article, editing this file, writing prototype code) can
+  happen in either environment via direct file read/write.
+- **Git operations (`add`, `commit`, `push`, `pull`) should only be run by Claude Code
+  CLI locally, or by the user directly — never attempted via a Cowork session's bash
+  tool against the mounted folder.** That bridge has caused stale `.git/index.lock`
+  files that can't be cleaned up from the sandbox side (permission mismatch across the
+  mount), and even when it works, the sandbox has no access to the user's stored git
+  credentials, so `push` fails anyway.
+- If a Cowork session edits a file in this repo, it should hand back a short git
+  command block for the user (or local Claude Code) to run, rather than trying to run
+  git itself.
 
 ## Mission
 
