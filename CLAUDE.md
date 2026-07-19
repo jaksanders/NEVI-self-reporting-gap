@@ -274,7 +274,13 @@ contribution.
 - OpenChargeMap is blocked specifically from Cowork's sandboxed fetch tool (confirmed
   twice now, 2026-07-19). Next attempt should be from local Claude Code CLI (normal
   laptop network) or a Chrome browser connected to this account — not another retry
-  from Cowork's `web_fetch`.
+  from Cowork's `web_fetch`. **Instructions for that attempt are written and saved at
+  `docs/ocm-pull-instructions.md`** (2026-07-19) — paste into a local Claude Code
+  session rather than re-deriving the approach. Covers: diagnostic-first network check,
+  API key handling, re-deriving the NEVI station+coordinate list if
+  `nevi_stations_clean.csv` isn't found locally (and committing it this time), the
+  0.5-mile matching threshold against AFDC coordinates, and a mandatory 5-station
+  manual spot-check before trusting any match.
 - Register a real (non-DEMO_KEY) AFDC/NLR API key at developer.nlr.gov/signup for
   ongoing use, rather than relying on the public rate-limited key.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-
