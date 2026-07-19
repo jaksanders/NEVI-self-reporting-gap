@@ -191,11 +191,26 @@ contribution.
   undercuts the audit's rigor with this audience.
   - Implementation: `/collector` in this repo (Vercel Function + Cron Job, deploys
     separately from the prototype). `api/collect-status.js` pulls AFDC daily and
-    writes a dated CSV snapshot to Vercel Blob; `api/list-snapshots.js` is a public
-    read endpoint for the prototype frontend to consume. See `/collector/README.md`
-    for deploy steps. Needs a few weeks of accumulated snapshots before flapping
-    detection has anything to say — not ready in time for initial article publish;
-    treat as a "part 2" / live-artifact follow-on.
+    writes a dated CSV snapshot to Vercel Blob; `api/list-snapshots.js` is a
+    no-auth-required endpoint for the prototype frontend to consume. See
+    `/collector/README.md` for deploy steps. Needs a few weeks of accumulated
+    snapshots before flapping detection has anything to say — not ready in time
+    for initial article publish; treat as a "part 2" / live-artifact follow-on.
+  - **Deployed and verified live 2026-07-19.** Project: `nevi-self-reporting-gap`
+    on Vercel (Hobby plan, personal account), production domain
+    `nevi-self-reporting-gap.vercel.app`. Blob store is **Private** (public beta
+    feature — `@vercel/blob` had to be bumped from `^0.27.1` to `^2.6.1` in
+    `package.json`, since the pinned version predated private-storage support
+    and only accepted `access: 'public'`). First manual snapshot confirmed
+    working end-to-end: `stations_captured: 216`, matching AFDC's own
+    `total_results`. Because the store is Private, blob URLs returned by
+    `list-snapshots` are not directly browser-fetchable without a token — the
+    eventual prototype frontend will need to read snapshot content through this
+    API (e.g. a future proxy/`get()` endpoint) rather than fetching `blob.url`
+    directly client-side. Cron fires daily at 12:00 UTC against the production
+    domain (Vercel's Standard Protection, on by default on Hobby, only guards
+    per-deployment preview URLs, not the production domain, so this doesn't
+    block the scheduled runs).
 
 ## Open decisions
 
