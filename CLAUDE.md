@@ -324,6 +324,15 @@ contribution.
   **Open question, not yet decided:** whether OCM's near-total comment silence stays in
   the prototype as a (negative) data point in its own right, or gets dropped from the
   active signal set — see Open decisions below.
+- **Cowork session verified the push (2026-07-20).** After Claude Code CLI committed and
+  pushed `265e79c`, a Cowork session independently confirmed it landed by fetching
+  `data/nevi_stations_current.csv` and `data/ocm_match_2026-07-20.csv` directly from
+  `raw.githubusercontent.com` (216 rows each, content matches what's described above).
+  Note for future debugging: the GitHub REST API's `git/trees` endpoint returned a
+  stale/cached result immediately after this push (old SHA, missing `data/`/`docs/`)
+  while `raw.githubusercontent.com` and the file content itself were already current —
+  if a future session sees an unexpected-looking `git/trees` result right after a push,
+  check raw file content before concluding the push failed.
 
 ## Open decisions
 
