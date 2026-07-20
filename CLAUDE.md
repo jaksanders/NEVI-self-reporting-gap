@@ -399,6 +399,47 @@ contribution.
   on this push. **Production URL not yet recorded here — pending a small follow-up
   commit once the dashboard import finishes building against this push.**
 
+## Progress log — 2026-07-19 (Cowork session — v1 prototype build oversight, session close)
+
+- **Role this session: reviewer/gate for the local Claude Code CLI's v1 build**, not
+  just a relay. Created `docs/prototype-build-instructions.md`, packaging 6 of the 7
+  identified v1 prototype tasks (data freeze, AFDC/Paren join, network-scope decision,
+  methodology copy, frontend build, deploy) into one local Claude Code session.
+  Deliberately left out of the automated package: pasting the final iframe into
+  WordPress (no WordPress access, shouldn't be given credentials for it) and a human
+  visual/mobile QA pass on the live embed (needs eyes, not automation).
+- At each step gate, read the actual files directly (`data/nevi_paren_comparison.json`,
+  `prototype/app.js`, `prototype/index.html`, `docs/prototype-methodology-copy.md`)
+  rather than approving off the CLI's summary alone. This caught one real precision
+  issue — instructed the CLI to use the report's prose figure for Kansas (96.1) over
+  its own chart-label read (96.0), since text extraction is less error-prone than a
+  visual label read — and pushed back once on the MD/DE/RI confidence assignment until
+  the CLI added pixel-level line-crossing verification rather than relying on
+  geographic-order inference alone. Reviewing `app.js`'s sort/expand logic by hand also
+  confirmed no bugs in the one thing the CLI itself flagged as untested (click
+  interactions, since headless Chrome without Puppeteer can't simulate clicks).
+- **Independently verified commit `eda797e` landed on `main`** via
+  `raw.githubusercontent.com` (not the GitHub API — its `/commits` endpoint came back
+  empty again, same cached/flaky behavior noted after the `265e79c` push above) —
+  `prototype/index.html` and `data/nevi_paren_comparison.json` both confirmed live with
+  correct content.
+- **Diagnosed a separate, recurring problem this session: this file not being read
+  first.** At least 3 separate Cowork sessions on this project (including this one's
+  own opening message) have started by reading the stale synced Project knowledge
+  cache instead of this file, despite the Cowork session protocol above already
+  documenting the fix. Confirmed via `session_info` transcripts that a prior session
+  already hit this exact failure and tried to fix it by editing that same protocol
+  section — the fix didn't hold in this session. [INFERENCE] Root cause: the synced
+  Project cache auto-loads into context with no action required, while reading this
+  file requires actively deciding to do so before responding to whatever was actually
+  asked — writing "read this first" into the file doesn't change that upstream
+  decision, since the decision to open the file happens before the file's own contents
+  can act on anything. Not re-editing the protocol section again for this reason (that
+  exact fix was already tried once and didn't transfer to this session); the more
+  durable mitigation found so far is the user opening new Cowork sessions with an
+  explicit "read CLAUDE.md at [path]" instruction rather than relying on the file to
+  enforce its own read order.
+
 ## Open decisions
 
 - **Updated 2026-07-19 (Cowork session):** Attempted to close this via Paren's public
@@ -475,3 +516,12 @@ contribution.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-
   prior-work, methodology) — not yet started; can proceed in parallel with prototype
   build since it doesn't depend on prototype results.
+- **New, 2026-07-19 (Cowork session close):** Vercel dashboard import for the new
+  `nevi-prototype` project (Root Directory `prototype`, Framework Preset `Other`) —
+  exact steps were handed to the user but completion not yet confirmed. Once it's live:
+  (a) a small follow-up commit is needed to record the production URL in the Progress
+  log above, and (b) the WordPress `<iframe>` embed snippet for the Custom HTML block
+  still needs to be produced — not done yet since it depends on that URL.
+- **New, 2026-07-19 (Cowork session close), non-blocking:** add `aria-expanded` to the
+  prototype's clickable state-table rows for screen readers — flagged during Step 6,
+  not yet fixed. Not a v1 launch blocker.
