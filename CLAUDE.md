@@ -462,8 +462,53 @@ contribution.
   Custom HTML block — unblocked now that the production URL exists, but not yet
   produced or pasted in. See Open decisions below.
 
+## Progress log — 2026-07-20 (Cowork session — NEVI coverage-of-state-fleet check)
+
+- **New methodological question raised, partially answered: what fraction of each
+  state's total DCFC fleet do our 216 NEVI stations represent, and is it reasonable to
+  attribute Paren's state-level reliability average to just the NEVI subset?** This had
+  never been checked — every prior data pull filtered AFDC to `funding_sources: NEVI`
+  only; no "all DCFC stations in this state" baseline existed.
+- **[FACT]** Pulled AFDC/NLR totals (`fuel_type=ELEC&ev_charging_level=dc_fast`) for 11
+  of the 21 NEVI states, using `total_results` from a `limit=1` call (small response,
+  avoids the payload-size truncation that broke the scheduled snapshot task). Coverage
+  ratio (NEVI stations ÷ total state DCFC stations) ranges from **0.03% (CA: 1 of 2,877)
+  to 16.95% (KY: 20 of 118)** — roughly a 500x spread. Full 11-state table saved to
+  `data/state_dcfc_coverage_partial_2026-07-20.json`. Sorted high to low: KY 16.95%,
+  ME 5.93%, HI 3.77%, DE 3.57%, KS 3.53%, CO 2.51%, MD 2.18%, MI 1.74%, AZ 0.44%,
+  GA 0.18%, CA 0.03%.
+- **Remaining 10 states (MN, NM, NY, OH, PA, RI, TX, UT, VA, WI) blocked on DEMO_KEY
+  rate limiting** — empty response body, no error, same failure signature already
+  documented for OpenChargeMap and the scheduled snapshot task elsewhere in this file.
+  Retried NY alone after a 40s pause; still blocked, so this isn't a burst/parallel-call
+  issue that clears quickly — treating it as the same underlying DEMO_KEY constraint
+  already flagged as an open item below (register a real key), not something to keep
+  retrying blindly.
+- **[INFERENCE] Methodological implication, not yet resolved:** where NEVI's coverage
+  share is tiny (CA 0.03%, GA 0.18%, AZ 0.44%), Paren's state average is overwhelmingly
+  driven by non-NEVI stations — attributing it to the 1-2 NEVI stations in that state is
+  a weak inference with no direct evidentiary link. Where coverage is highest (KY
+  16.95%, ME 5.93%), the state average is still majority non-NEVI but less diluted,
+  making the attribution somewhat less unreasonable, though still not equivalent to a
+  NEVI-specific measurement. **[SPECULATION, flagged not asserted]** there's also a
+  possible population mismatch independent of size: NEVI stations are systematically
+  newer (funding began 2022, corridor-gap-filling mandate) than a state's broader DCFC
+  fleet, which includes long-tail older/urban installations (e.g., car-dealership
+  chargers visible in the raw AFDC pulls) — this could bias the comparison in either
+  direction and hasn't been tested.
+- **Not yet decided:** whether to (a) finish the remaining 10 states once a real API key
+  exists, (b) add a coverage-ratio column/caveat to the prototype and methodology copy
+  so readers can judge per-state attribution strength themselves (current lean, since it
+  fits the project's existing confidence-tier pattern for Paren reads), or (c) treat this
+  as an article-only caveat without touching the live prototype.
+
 ## Open decisions
 
+- **New, 2026-07-20:** Finish the state DCFC-fleet coverage pull for the remaining 10
+  states (MN, NM, NY, OH, PA, RI, TX, UT, VA, WI) once a real AFDC/NLR API key exists —
+  same registration already listed as an open item below. Then decide whether coverage
+  ratio becomes a visible column/caveat in the prototype (current lean: yes) or stays
+  article-only.
 - **Updated 2026-07-19 (Cowork session):** Attempted to close this via Paren's public
   Q2 2026 report page (`paren.app/reports/us-ev-fast-charging-q2-2026`, published
   2026-07-14) instead of re-reading the screenshot. Its prose is *not* JS-gated —

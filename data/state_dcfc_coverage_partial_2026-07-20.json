@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "description": "What fraction of each NEVI state's total public DC-fast-charging (DCFC) fleet the 216 NEVI-funded stations represent. Built to test whether attributing Paren's state-level reliability average (measured across the whole state DCFC fleet) to just the NEVI subset is reasonable.",
+    "status": "PARTIAL - 11 of 21 NEVI states. Remaining 10 (MN, NM, NY, OH, PA, RI, TX, UT, VA, WI) blocked on AFDC/NLR DEMO_KEY rate limiting - empty response body, no error, same signature as other DEMO_KEY throttling documented in CLAUDE.md. Retried NY after a 40s pause, still blocked. Needs a real (non-DEMO_KEY) API key to finish - see CLAUDE.md Open decisions (already a pending item from 2026-07-19).",
+    "source": "AFDC/NLR API (developer.nlr.gov/api/alt-fuel-stations/v1.json), fuel_type=ELEC, ev_charging_level=dc_fast, per-state total_results field. NEVI counts from data/nevi_stations_current.csv.",
+    "generated": "2026-07-20"
+  },
+  "states": [
+    {"state": "KY", "nevi_station_count": 20, "total_dcfc_stations": 118, "nevi_coverage_pct": 16.95},
+    {"state": "ME", "nevi_station_count": 8,  "total_dcfc_stations": 135, "nevi_coverage_pct": 5.93},
+    {"state": "HI", "nevi_station_count": 2,  "total_dcfc_stations": 53,  "nevi_coverage_pct": 3.77},
+    {"state": "DE", "nevi_station_count": 2,  "total_dcfc_stations": 56,  "nevi_coverage_pct": 3.57},
+    {"state": "KS", "nevi_station_count": 3,  "total_dcfc_stations": 85,  "nevi_coverage_pct": 3.53},
+    {"state": "CO", "nevi_station_count": 13, "total_dcfc_stations": 518, "nevi_coverage_pct": 2.51},
+    {"state": "MD", "nevi_station_count": 8,  "total_dcfc_stations": 367, "nevi_coverage_pct": 2.18},
+    {"state": "MI", "nevi_station_count": 10, "total_dcfc_stations": 575, "nevi_coverage_pct": 1.74},
+    {"state": "AZ", "nevi_station_count": 1,  "total_dcfc_stations": 225, "nevi_coverage_pct": 0.44},
+    {"state": "GA", "nevi_station_count": 1,  "total_dcfc_stations": 562, "nevi_coverage_pct": 0.18},
+    {"state": "CA", "nevi_station_count": 1,  "total_dcfc_stations": 2877, "nevi_coverage_pct": 0.03}
+  ],
+  "states_not_yet_pulled": ["MN", "NM", "NY", "OH", "PA", "RI", "TX", "UT", "VA", "WI"]
+}
