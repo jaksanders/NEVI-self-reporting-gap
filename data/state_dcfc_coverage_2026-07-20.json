@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "description": "What fraction of each NEVI state's total public DC-fast-charging (DCFC) fleet the 216 NEVI-funded stations represent. Built to test whether attributing Paren's state-level reliability average (measured across the whole state DCFC fleet) to just the NEVI subset is reasonable.",
+    "status": "COMPLETE - 21 of 21 NEVI states",
+    "source": "AFDC/NLR API (developer.nlr.gov/api/alt-fuel-stations/v1.json), fuel_type=ELEC, ev_charging_level=dc_fast, per-state total_results field. NEVI counts from data/nevi_stations_current.csv.",
+    "generated": "2026-07-20",
+    "validation": {
+      "nevi_station_count_sum": 216,
+      "matches_nevi_stations_current_csv_total": true
+    }
+  },
+  "states": [
+    {"state": "KY", "nevi_station_count": 20, "total_dcfc_stations": 118,  "nevi_coverage_pct": 16.95},
+    {"state": "RI", "nevi_station_count": 6,  "total_dcfc_stations": 48,   "nevi_coverage_pct": 12.50},
+    {"state": "PA", "nevi_station_count": 42, "total_dcfc_stations": 426,  "nevi_coverage_pct": 9.86},
+    {"state": "WI", "nevi_station_count": 20, "total_dcfc_stations": 248,  "nevi_coverage_pct": 8.06},
+    {"state": "ME", "nevi_station_count": 8,  "total_dcfc_stations": 135,  "nevi_coverage_pct": 5.93},
+    {"state": "OH", "nevi_station_count": 22, "total_dcfc_stations": 450,  "nevi_coverage_pct": 4.89},
+    {"state": "NM", "nevi_station_count": 8,  "total_dcfc_stations": 180,  "nevi_coverage_pct": 4.44},
+    {"state": "HI", "nevi_station_count": 2,  "total_dcfc_stations": 53,   "nevi_coverage_pct": 3.77},
+    {"state": "DE", "nevi_station_count": 2,  "total_dcfc_stations": 56,   "nevi_coverage_pct": 3.57},
+    {"state": "KS", "nevi_station_count": 3,  "total_dcfc_stations": 85,   "nevi_coverage_pct": 3.53},
+    {"state": "NY", "nevi_station_count": 21, "total_dcfc_stations": 762,  "nevi_coverage_pct": 2.76},
+    {"state": "CO", "nevi_station_count": 13, "total_dcfc_stations": 518,  "nevi_coverage_pct": 2.51},
+    {"state": "UT", "nevi_station_count": 5,  "total_dcfc_stations": 206,  "nevi_coverage_pct": 2.43},
+    {"state": "MD", "nevi_station_count": 8,  "total_dcfc_stations": 367,  "nevi_coverage_pct": 2.18},
+    {"state": "MN", "nevi_station_count": 7,  "total_dcfc_stations": 336,  "nevi_coverage_pct": 2.08},
+    {"state": "MI", "nevi_station_count": 10, "total_dcfc_stations": 575,  "nevi_coverage_pct": 1.74},
+    {"state": "TX", "nevi_station_count": 14, "total_dcfc_stations": 893,  "nevi_coverage_pct": 1.57},
+    {"state": "VA", "nevi_station_count": 2,  "total_dcfc_stations": 382,  "nevi_coverage_pct": 0.52},
+    {"state": "AZ", "nevi_station_count": 1,  "total_dcfc_stations": 225,  "nevi_coverage_pct": 0.44},
+    {"state": "GA", "nevi_station_count": 1,  "total_dcfc_stations": 562,  "nevi_coverage_pct": 0.18},
+    {"state": "CA", "nevi_station_count": 1,  "total_dcfc_stations": 2877, "nevi_coverage_pct": 0.03}
+  ]
+}

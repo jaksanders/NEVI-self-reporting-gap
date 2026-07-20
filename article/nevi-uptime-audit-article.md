@@ -4,9 +4,11 @@
 
 The National Electric Vehicle Infrastructure (NEVI) program has directed up to $5 billion in federal formula funding toward EV fast-charging buildout since 2022, contingent on funded stations self-reporting an average annual uptime of 97% per port to FHWA via a tool called EV-ChART. In February 2025, FHWA froze roughly $2.74 billion in unobligated NEVI funds and rescinded prior state plan approvals; a federal court ordered a partial restart in June 2025, FHWA issued revised interim guidance that August, and a court found in January 2026 that the freeze itself had been unlawful. Through all of that upheaval, one thing didn't change: the 97% uptime requirement, self-reported with no independent verification mechanism, survived intact.
 
-I set out to test whether independent public data could verify that claim specifically for NEVI-funded stations, using only free, publicly available sources — federal station data, a commercial reliability index's published aggregates, and a crowdsourced charging-station platform. The honest answer, after building and checking three independent signals against 216 NEVI-funded stations, is more limited than I expected going in: adequate public, station-level data to verify the claim mostly doesn't exist yet. Where a comparison is possible at all, NEVI-funded stations account for well under 3% of a typical state's total DC fast-charging fleet — ranging from 0.03% in California to 17% in Kentucky — which means the closest available third-party number is, for most states, barely a measurement of NEVI stations at all.
+I set out to test whether independent public data could verify that claim specifically for NEVI-funded stations, using only free, publicly available sources — federal station data, a commercial reliability index's published aggregates, and a crowdsourced charging-station platform. The honest answer, after building and checking three independent signals against 216 NEVI-funded stations, is more limited than I expected going in: adequate public, station-level data to verify the claim mostly doesn't exist yet. Where a comparison is possible at all, NEVI-funded stations' share of a state's total DC fast-charging fleet ranges from 0.03% in California to 16.95% in Kentucky — a roughly 500x spread — with a median across all 21 NEVI states of 2.76%. That median undersells how split the picture actually is: 11 of 21 states sit below 3% coverage, where the closest available third-party number is barely a measurement of NEVI stations at all, but the other 10 — including Pennsylvania and Wisconsin, two of the states with the most NEVI-funded stations — sit high enough that the comparison carries real, if still partial, evidentiary weight.
 
 That's not nothing. It's a finding in its own right: the same self-reporting mechanism that survived a year of litigation intact still has no independent way to check it, at the specific stations it governs, using data available to the public today.
+
+![The whole audit in one chart: every measurable state's independent reliability rate sits below NEVI's 97% requirement, but most sit at low coverage, where that gap can't be attributed to NEVI stations specifically.](images/summary-coverage-vs-reliability.png)
 
 This project was researched and built in collaboration with Claude (Anthropic), used throughout for data collection, validation, and drafting. All conclusions, interpretations, and any mistakes are mine alone.
 
@@ -51,23 +53,35 @@ I queried OpenChargeMap for all 216 NEVI stations at a 1-mile radius, matched on
 
 This is the finding that most changed how I'd frame the rest of the project, and it came from a check I should have run earlier: what fraction of each state's *total* public DC-fast-charging fleet do the NEVI-funded stations actually represent? Every AFDC pull up to this point had already been filtered to NEVI-funded stations only, so there was no denominator to compare against.
 
-Pulling total DCFC station counts per state (same AFDC/NLR API, no funding filter) for 11 of the 21 NEVI states before hitting the free API key's rate limit gives this:
+Pulling total DCFC station counts per state (same AFDC/NLR API, no funding filter) for all 21 NEVI states gives this:
 
 | State | NEVI stations | Total state DCFC stations | NEVI's share |
 |---|---|---|---|
 | Kentucky | 20 | 118 | 16.95% |
+| Rhode Island | 6 | 48 | 12.50% |
+| Pennsylvania | 42 | 426 | 9.86% |
+| Wisconsin | 20 | 248 | 8.06% |
 | Maine | 8 | 135 | 5.93% |
+| Ohio | 22 | 450 | 4.89% |
+| New Mexico | 8 | 180 | 4.44% |
 | Hawaii | 2 | 53 | 3.77% |
 | Delaware | 2 | 56 | 3.57% |
 | Kansas | 3 | 85 | 3.53% |
+| New York | 21 | 762 | 2.76% |
 | Colorado | 13 | 518 | 2.51% |
+| Utah | 5 | 206 | 2.43% |
 | Maryland | 8 | 367 | 2.18% |
+| Minnesota | 7 | 336 | 2.08% |
 | Michigan | 10 | 575 | 1.74% |
+| Texas | 14 | 893 | 1.57% |
+| Virginia | 2 | 382 | 0.52% |
 | Arizona | 1 | 225 | 0.44% |
 | Georgia | 1 | 562 | 0.18% |
 | California | 1 | 2,877 | 0.03% |
 
-Paren's state-level reliability rate is, by its own description, a measurement of essentially the whole state's DCFC fleet — not a NEVI-specific number. In California, where one NEVI station sits alongside 2,876 others, the state's Paren figure is a measurement of everything except, almost entirely, the NEVI station in question. In Kentucky, where NEVI stations are 17% of the state total, the same figure carries real, if still partial, weight. Between those two extremes is roughly a 500x range in how much evidentiary weight the "gap" comparison actually carries, state by state — and that range isn't visible unless you go looking for the denominator, which is exactly what didn't happen until this check.
+![NEVI's share of each state's total DC fast-charging fleet, sorted from Kentucky at 16.95% down to California at 0.03% — a roughly 500x range, shown on a log scale.](images/finding1-coverage-ratio.png)
+
+Paren's state-level reliability rate is, by its own description, a measurement of essentially the whole state's DCFC fleet — not a NEVI-specific number. In California, where one NEVI station sits alongside 2,876 others, the state's Paren figure is a measurement of everything except, almost entirely, the NEVI station in question. In Kentucky, where NEVI stations are 17% of the state total, the same figure carries real, if still partial, weight. Between those two extremes is roughly a 500x range in how much evidentiary weight the "gap" comparison actually carries, state by state — and that range isn't visible unless you go looking for the denominator, which is exactly what didn't happen until this check. Across the full set of 21 states, it's close to a coin flip: 11 sit below 3% coverage, 10 sit at or above it — and the higher-coverage group includes some of the largest NEVI deployments by station count (Pennsylvania at 42 stations, Ohio at 22, Kentucky and Wisconsin at 20 each), so the comparison isn't uniformly weak across the dataset, just uneven state by state.
 
 There's also a plausible population mismatch independent of size: NEVI stations are systematically newer than a state's broader DCFC fleet, since NEVI funding only began in 2022 and specifically targets highway-corridor gaps, while the wider fleet includes a long tail of older, often urban installations (car-dealership chargers dating to 2011–2012 turned up repeatedly in the raw AFDC records). Newer and older infrastructure may have systematically different reliability profiles in either direction. I haven't tested this, and I'm flagging it as a plausible confound, not a finding.
 
@@ -77,11 +91,17 @@ Even setting the coverage problem aside, NEVI's uptime requirement and Paren's r
 
 NEVI's EV-ChART formula is time-based, per port, calculated as `uptime% = (total hours − downtime hours) / total hours × 100`, with a 97% annual average minimum. Paren's Reliability Index is a proprietary composite of four session-level outcomes — clean success, success-with-retry, failed attempt, and downtime — which is a different construct measuring something closer to the ChargerHelp report's "first-time success" concept than a clock-time percentage. A station or state could plausibly satisfy NEVI's formula while producing a meaningfully lower Paren rate, or vice versa, because the two aren't in the same unit.
 
-So rather than compute a single converted "gap" number, the comparison in the prototype is directional: NEVI's flat 97% self-reported requirement, next to what an independently measured, differently defined metric suggests, for the 21 states where NEVI has funded stations. Paren's Q2 2026 rates for those states range from 90.3% (Rhode Island) to 96.1% (Kansas) — every one below NEVI's 97% floor, but for the reasons in Finding 1, that gap can't be attributed to the NEVI-funded stations specifically with any confidence in most of those states. The full state-by-state table, with confidence tiers and coverage context, is in the [interactive prototype](https://nevi-self-reporting-gap-i4u4.vercel.app/).
+So rather than compute a single converted "gap" number, the comparison in the prototype is directional: NEVI's flat 97% self-reported requirement, next to what an independently measured, differently defined metric suggests, for the 21 states where NEVI has funded stations. Paren's Q2 2026 rates for those states range from 90.3% (Rhode Island) to 96.1% (Kansas) — every one below NEVI's 97% floor, but for the reasons in Finding 1, that gap can't be attributed to the NEVI-funded stations specifically with any confidence in most of those states.
+
+![All 21 NEVI states' Paren Q2 2026 reliability rates, sorted, against the 97% NEVI requirement line — colored by how confidently each figure was read from Paren's report.](images/finding2-paren-vs-nevi-requirement.png)
+
+The full state-by-state table, with confidence tiers and coverage context, is in the [interactive prototype](https://nevi-self-reporting-gap-i4u4.vercel.app/).
 
 ## Finding 3: The One Independent Crowdsourced Signal Available Has Almost Nothing to Say
 
 Of the three signals this project set out to combine, OpenChargeMap was meant to be the genuinely independent one — user check-ins and fault reports aren't operator-submitted the way AFDC status codes and NEVI's own EV-ChART figures are. It came back essentially empty. Across all 216 NEVI stations, matched or not, there are **zero** fault-report comments (OpenChargeMap's own `CommentTypeID 1000`, confirmed from their reference data rather than guessed at from keywords). 176 of the 182 matched stations — 97% — have zero user comments of any kind.
+
+![Of 216 NEVI stations, 182 matched a nearby OpenChargeMap listing; of those, 176 have zero user comments and none — across all 216 stations, matched or not — have a fault-report comment.](images/finding3-ocm-signal.png)
 
 I can't confirm why. It's plausible that NEVI stations skew newer and lower-traffic than the fleet OpenChargeMap's userbase mostly reports on, or that a meaningful share of drivers at Tesla-network NEVI sites use Tesla's own app instead of OpenChargeMap. Either way, the matching pipeline itself is validated (spot-checked, correct site pairing), so this is a real result about the signal's availability, not a pipeline bug.
 
@@ -99,7 +119,6 @@ What does hold up, unaffected by any of this: NEVI requires 97% self-reported up
 
 ## Future Work
 
-- Register a non-rate-limited AFDC/NLR API key and finish the coverage-ratio check for the remaining 10 NEVI states.
 - Decide whether OpenChargeMap's near-total silence belongs in the prototype as a minor supporting data point, or gets dropped as a dead signal.
 - Let the daily AFDC status collector accumulate enough history (several more weeks) to test for status-flapping patterns, with the operator-submitted-data caveat carried forward explicitly.
 - Add the coverage-ratio finding as a visible column or caveat in the interactive prototype, not just this write-up, so a reader in California and a reader in Kentucky aren't shown the same implicit confidence in their state's number.

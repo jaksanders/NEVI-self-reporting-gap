@@ -551,8 +551,75 @@ contribution.
   fits the project's existing confidence-tier pattern for Paren reads), or (c) treat this
   as an article-only caveat without touching the live prototype.
 
+## Progress log — 2026-07-20 (local Claude Code CLI, coverage-ratio check completed — all 21 states)
+
+- **Coverage-ratio pull finished, per `docs/finish-coverage-ratio-instructions.md` Steps
+  0–5.** User had registered a real AFDC/NLR API key (`$env:NLR_API_KEY`) since the last
+  session, closing the DEMO_KEY block. Pulled `total_results` for the remaining 10 states
+  (MN, NM, NY, OH, PA, RI, TX, UT, VA, WI) — all 10 returned cleanly on the first attempt,
+  confirming this really was a DEMO_KEY-specific constraint, not a transient one. Merged
+  with the existing 11-state pull into `data/state_dcfc_coverage_2026-07-20.json`
+  (`status: "COMPLETE - 21 of 21 NEVI states"`). Validated: `nevi_station_count` sums to
+  216 across all 21 states, matching `nevi_stations_current.csv`'s own total.
+  `data/state_dcfc_coverage_partial_2026-07-20.json` (the 11-state file) is left in place
+  as a dated record of the earlier partial pull, not deleted.
+- **[FACT] Final 21-state coverage range: 0.03% (California) to 16.95% (Kentucky)** — the
+  extremes were already correct in the 11-state partial pull and didn't move. What did
+  change is the shape of the middle of the distribution: the 10 newly-pulled states
+  include several with meaningful coverage — Rhode Island 12.50%, Pennsylvania 9.86%,
+  Wisconsin 8.06%, Ohio 4.89%, New Mexico 4.44% — that weren't visible in the partial
+  data. Full sort, high to low: KY 16.95%, RI 12.50%, PA 9.86%, WI 8.06%, ME 5.93%,
+  OH 4.89%, NM 4.44%, HI 3.77%, DE 3.57%, KS 3.53%, NY 2.76%, CO 2.51%, UT 2.43%,
+  MD 2.18%, MN 2.08%, MI 1.74%, TX 1.57%, VA 0.52%, AZ 0.44%, GA 0.18%, CA 0.03%.
+  Median across all 21 = **2.76%** (mean 4.28%); 11 of 21 states sit below 3% coverage,
+  10 at or above — close to an even split, not the "well under 3% for most states"
+  picture the 11-state partial data suggested. Notably, several of the higher-coverage
+  states (PA 42 stations, OH 22, KY and WI 20 each) are also among the largest NEVI
+  deployments by station count, so the higher-coverage half isn't just a handful of
+  small states.
+- **Article updated with real numbers, not just caveat removal** (per the handoff doc's
+  explicit instruction not to keep the 11-state figures once complete): exec summary
+  rewritten to state the actual median (2.76%) and the near-even 11-vs-10 split, instead
+  of asserting "most states" have negligible coverage; Finding 1's table expanded to all
+  21 rows and its prose gained a sentence noting the coin-flip split and that the
+  higher-coverage half includes some of the largest NEVI deployments. The Finding 1
+  section's extremes-based sentences (California/Kentucky as the two poles, "roughly
+  500x") didn't need to change, since those two figures were unchanged by the full pull.
+  Removed the "Register a non-rate-limited AFDC/NLR API key..." Future Work bullet, now
+  done.
+- **Both affected charts regenerated** — `finding1-coverage-ratio.png` (log-scale bar,
+  now 21 bars) and `summary-coverage-vs-reliability.png` (scatter, now 21 points),
+  matching the existing style (`#2b6cb0` blue, `#e0e0e0` gridlines, `#c53030` red 97%
+  line, `#718096` gray captions, log-scale x-axis). **Neither this laptop nor the
+  project's prior Cowork sandbox has a real Python/matplotlib available on this
+  machine** — confirmed no `python`/`python3`/`node` resolve to a real interpreter here
+  (only Microsoft Store app-execution-alias stubs), and no conda install found either,
+  so the original matplotlib script (never saved to the repo — see the 2026-07-20
+  "visualizations added" log entry) couldn't just be rerun. Rebuilt both charts instead
+  as hand-coded SVG driven by a small inline JS layout script (log-scale position
+  formulas, gridlines, bars/points, labels), rendered to PNG via a local headless Chrome
+  install (`chrome.exe --headless=new --screenshot`, same tool already used earlier in
+  this project for frontend testing) rather than matplotlib. Output visually verified
+  side-by-side against `finding2-...`/`finding3-...` (the two complete-data charts used
+  as the style reference) before replacing the files — same fonts/colors/gridline
+  weights, no pixel-perfect matplotlib match attempted or needed. Summary chart's
+  caption text rewritten to state the 11-vs-10 split honestly rather than claiming
+  "only Kentucky" has meaningful coverage, which stopped being true once Rhode Island,
+  Pennsylvania, Wisconsin, and others were added; the chart's overall title ("The Whole
+  Audit in One Chart...") was left unchanged per the handoff doc's instruction, since
+  11 of 21 (a bare majority) still supports "mostly."
+- **Resolved:** the "Open decisions" item below about finishing the coverage-ratio pull
+  is closed. `docs/finish-coverage-ratio-instructions.md` is complete and doesn't need
+  further action.
+
 ## Open decisions
 
+- **Resolved 2026-07-20 (local Claude Code CLI):** Coverage-ratio pull is complete — all
+  21 states, `data/state_dcfc_coverage_2026-07-20.json`, median 2.76% / range 0.03–16.95%,
+  article and both charts updated with real numbers. See the "coverage-ratio check
+  completed" progress log entry above for the full account. Registering the API key
+  itself (originally item below) turned out to already be done by the time this session
+  started — `$env:NLR_API_KEY` was already set.
 - **Updated 2026-07-20 (later, Cowork session):** Confirmed the DEMO_KEY block on the
   remaining 10 states is not a short-window throttle — retried after 40s and again after
   ~90 minutes of unrelated session activity, same empty-response result both times. Also
@@ -635,8 +702,9 @@ contribution.
   "still open" MD/DE/NY/VA item two bullets up is closed. All 21 NEVI states are now
   chart- or text-confirmed with zero `unconfirmed` entries — see the Progress log
   above for the pixel-tracing method used on MD/DE/RI specifically.
-- Register a real (non-DEMO_KEY) AFDC/NLR API key at developer.nlr.gov/signup for
-  ongoing use, rather than relying on the public rate-limited key.
+- **Resolved 2026-07-20 (local Claude Code CLI):** A real (non-DEMO_KEY) AFDC/NLR API
+  key is registered and held as `$env:NLR_API_KEY` — used to complete the 21-state
+  coverage-ratio pull above.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-
   prior-work, methodology) — not yet started; can proceed in parallel with prototype
   build since it doesn't depend on prototype results.
