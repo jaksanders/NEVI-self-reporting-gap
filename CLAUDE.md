@@ -440,6 +440,28 @@ contribution.
   explicit "read CLAUDE.md at [path]" instruction rather than relying on the file to
   enforce its own read order.
 
+## Progress log — 2026-07-20 (Cowork session — prototype deploy verified)
+
+- **v1 prototype deployed to Vercel, production URL confirmed live.** User completed
+  the dashboard import (Root Directory `prototype`, Framework Preset `Other`, no build
+  command) from this same GitHub repo. First URL the user shared
+  (`nevi-self-reporting-gap-i4u4-xoi4vdxpz-james-sanders.vercel.app`) was a
+  per-deployment preview URL, not the production alias — `web_fetch` on it returned
+  Vercel's SSO login page (confirmed directly, not assumed), consistent with Vercel's
+  Standard Protection gating preview/deployment URLs by default on Hobby plan. The
+  correct production domain, **`nevi-self-reporting-gap-i4u4.vercel.app`**, was
+  confirmed separately: `web_fetch` on the root returns the actual page (title,
+  methodology copy, no login gate), and `web_fetch` on `/data/nevi_paren_comparison.json`
+  returns valid JSON with all 21 states and a station-count sum of 216, matching
+  `data/nevi_stations_current.csv`. Note the Vercel project name Vercel actually used
+  was `nevi-self-reporting-gap` (matching the repo name), not `nevi-prototype` as
+  originally instructed in the 2026-07-19 build steps — cosmetic, doesn't affect
+  anything, but flagging so a future session isn't confused if it goes looking for a
+  project literally named `nevi-prototype` and doesn't find one.
+- **Next, not yet done:** WordPress `<iframe>` embed snippet for jamesaksanders.com's
+  Custom HTML block — unblocked now that the production URL exists, but not yet
+  produced or pasted in. See Open decisions below.
+
 ## Open decisions
 
 - **Updated 2026-07-19 (Cowork session):** Attempted to close this via Paren's public
@@ -516,12 +538,12 @@ contribution.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-
   prior-work, methodology) — not yet started; can proceed in parallel with prototype
   build since it doesn't depend on prototype results.
-- **New, 2026-07-19 (Cowork session close):** Vercel dashboard import for the new
-  `nevi-prototype` project (Root Directory `prototype`, Framework Preset `Other`) —
-  exact steps were handed to the user but completion not yet confirmed. Once it's live:
-  (a) a small follow-up commit is needed to record the production URL in the Progress
-  log above, and (b) the WordPress `<iframe>` embed snippet for the Custom HTML block
-  still needs to be produced — not done yet since it depends on that URL.
+- **Resolved 2026-07-20 (Cowork session):** Vercel dashboard import completed and
+  production URL confirmed live and public:
+  `https://nevi-self-reporting-gap-i4u4.vercel.app/` (verified via direct `web_fetch`,
+  not taken on the user's word alone — see Progress log above). **New open item in its
+  place:** the WordPress `<iframe>` embed snippet for the Custom HTML block on
+  jamesaksanders.com — not yet produced.
 - **New, 2026-07-19 (Cowork session close), non-blocking:** add `aria-expanded` to the
   prototype's clickable state-table rows for screen readers — flagged during Step 6,
   not yet fixed. Not a v1 launch blocker.
