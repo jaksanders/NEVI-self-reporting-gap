@@ -500,6 +500,16 @@ contribution.
 - **Not yet done**: user review/edit of both drafts, running the pre-publish checklist items
   (prototype coverage-ratio caveat, OCM framing decision, link resolution spot-check, prototype
   URL reconfirmation), actually publishing.
+- **Visualizations added (same session, later)**: four matplotlib charts generated from the
+  project's own data and embedded directly in `article/nevi-uptime-audit-article.md`, saved to
+  `article/images/`: `summary-coverage-vs-reliability.png` (a scatter combining Findings 1 and 2
+  — coverage ratio on the x-axis, Paren rate on the y-axis, 97% reference line — used right after
+  the exec summary as the single "whole audit" visual), `finding1-coverage-ratio.png` (log-scale
+  horizontal bar, the 11-state coverage ratio table), `finding2-paren-vs-nevi-requirement.png`
+  (all 21 states' Paren rates vs. the 97% line, colored by confidence tier), and
+  `finding3-ocm-signal.png` (two-panel bar: match rate, then comment activity among matched
+  stations). Styled plainly (single blue accent, light grid, no marketing colors) to match the
+  source portfolio pieces' chart aesthetic rather than a flashier infographic style.
 
 ## Progress log — 2026-07-20 (Cowork session — NEVI coverage-of-state-fleet check)
 
@@ -543,11 +553,19 @@ contribution.
 
 ## Open decisions
 
-- **New, 2026-07-20:** Finish the state DCFC-fleet coverage pull for the remaining 10
-  states (MN, NM, NY, OH, PA, RI, TX, UT, VA, WI) once a real AFDC/NLR API key exists —
-  same registration already listed as an open item below. Then decide whether coverage
-  ratio becomes a visible column/caveat in the prototype (current lean: yes) or stays
-  article-only.
+- **Updated 2026-07-20 (later, Cowork session):** Confirmed the DEMO_KEY block on the
+  remaining 10 states is not a short-window throttle — retried after 40s and again after
+  ~90 minutes of unrelated session activity, same empty-response result both times. Also
+  confirmed (by reading it) that this can't be closed from Cowork: the signup form at
+  developer.nlr.gov/signup is JS-rendered, and the resulting key needs to stay out of
+  chat transcripts the same way the OCM key did — env var in local Claude Code CLI, not
+  pasted here. Full handoff doc written: `docs/finish-coverage-ratio-instructions.md`,
+  covering the remaining pull, merging to a complete 21-state dataset, updating the
+  article's exec summary and Finding 1 section with real (not placeholder) numbers,
+  regenerating the two charts built from the 11-state subset, and closing this out in
+  CLAUDE.md. **The article's exec summary and overall-summary chart are explicitly
+  holding on this** — user decided to finish the data before publishing rather than
+  soften the language and ship with a partial sample.
 - **Updated 2026-07-19 (Cowork session):** Attempted to close this via Paren's public
   Q2 2026 report page (`paren.app/reports/us-ev-fast-charging-q2-2026`, published
   2026-07-14) instead of re-reading the screenshot. Its prose is *not* JS-gated —
