@@ -263,6 +263,68 @@ contribution.
   sessions read this file first instead of reconstructing state from other session
   transcripts.
 
+## Progress log — 2026-07-20 (local Claude Code CLI, first successful OCM network test)
+
+- **Claude CLI installed and working on this laptop.** Native PowerShell installer
+  (`irm https://claude.ai/install.ps1 | iex`) placed the binary at
+  `C:\Users\jsanders\.local\bin\claude.exe`. Hit one install snag worth remembering:
+  the User `PATH` variable had literal stray `"` characters embedded around the
+  `...WindowsApps;...\.local\bin` entries (visible directly in `PATH` output — not a
+  shell-escaping issue, actual corrupted characters in the stored env var), which broke
+  lookup even though the directory and binary both existed. Fixed by rebuilding the User
+  PATH via `[Environment]::SetEnvironmentVariable` with a regex strip of `"` — avoid
+  `setx` for PATH edits going forward, since it has a ~1024-char truncation risk on long
+  PATH values that a targeted `[Environment]::...` read/write avoids.
+- **OpenChargeMap: sandbox block ruled out, real blocker found — needs an API key.**
+  Ran `docs/ocm-pull-instructions.md` Step 0 from this laptop: the network path itself
+  works fine (unlike Cowork's silent empty-body failure), but OCM returned **HTTP 403,
+  "You must specify an API key using the key query parameter or x-api-key header"** on
+  the same bare, unauthenticated request that (per an earlier session) used to work
+  without one. **This confirms two separate, now-isolated issues**, not one: Cowork's
+  sandbox blocks the `api.openchargemap.io` subdomain outright (empty body, no HTTP
+  response at all), while OCM itself has separately started enforcing key-required auth
+  on all programmatic requests, laptop or sandbox. Fixing the sandbox issue alone would
+  not have been enough — this was going to block progress either way.
+- **Next step: register a free OCM API key** at
+  https://openchargemap.org/site/profile/applications (user must do this manually — not
+  something Claude should do on their behalf). Once obtained, set it as an environment
+  variable in the same shell before starting `claude` (e.g. `$env:OCM_API_KEY = "..."`
+  in PowerShell) rather than pasting the raw key into a Claude Code chat message or any
+  file — this project already has an open, unresolved item (see the trading-strategies
+  project) where a live Anthropic API key ended up sitting in plaintext in a saved chat
+  log, so treat any new key the same way: env var only, never committed, never echoed
+  back in a response.
+- Steps 2 onward of `docs/ocm-pull-instructions.md` (station list load, per-station OCM
+  match, spot-check, save) are still not run — blocked on the API key above.
+- **Steps 2–5 of `docs/ocm-pull-instructions.md` completed, same day, after user
+  registered an OCM API key** (held only as `$env:OCM_API_KEY`, never pasted into chat
+  or committed). **Step 2:** re-pulled AFDC fresh (`nevi_stations_clean.csv` was indeed
+  never committed, confirming the gap the instructions doc called out) and saved
+  `data/nevi_stations_current.csv` — 216 rows, exact match to AFDC's own
+  `total_results` (no drift). **Step 3:** queried OCM for all 216 stations at
+  distance=1mi/maxresults=5/includecomments=true, rate-limited to ~1 req/sec (~5 min
+  total), 0 API errors; saved `data/ocm_match_2026-07-20.csv`. OCM's `AddressInfo.Distance`
+  field is already computed server-side in the requested unit (verified against a
+  near-zero-distance match) — no haversine needed. Fault-report comments are identified
+  via OCM's own `UserCommentTypes` reference data: `CommentTypeID 1000` = "Fault Report
+  (Notice To Users And Operator)" — confirmed from `/v3/referencedata/`, not guessed
+  from keywords. **Results: 182/216 matched within 0.5mi** (avg distance 0.038mi; 26 had
+  no POI within 1mi at all; 8 had a nearest POI beyond 0.5mi and were correctly left
+  unmatched rather than force-paired). **Step 4:** 5/5 random spot-checks (cross-checked
+  full street address + lat/lon against the original AFDC record) confirmed correct
+  same-site pairing — including two cases where OCM's display title differs from AFDC's
+  (`Katie's Korner - Tesla Supercharger` / `RMP Layton`) but address+coordinates confirm
+  same physical site. **[FACT] — key finding: OCM is a near-dead signal for this station
+  set.** Of the 182 matched stations, 176 (97%) have zero user comments, and **zero fault
+  -report comments (`CommentTypeID 1000`) exist across all 216 NEVI stations**, matched
+  or not. This is a directly-observed result, not a pipeline defect (matching logic
+  passed spot-check). **[INFERENCE, unconfirmed]** — plausibly because NEVI stations
+  skew newer/lower-traffic, or because a meaningful share are Tesla-network sites where
+  drivers use the Tesla app instead of OCM, rather than OCM coverage being bad generally.
+  **Open question, not yet decided:** whether OCM's near-total comment silence stays in
+  the prototype as a (negative) data point in its own right, or gets dropped from the
+  active signal set — see Open decisions below.
+
 ## Open decisions
 
 - Double-check the 4 medium-confidence Paren state readings (NY, MD, DE, VA) against
@@ -271,16 +333,17 @@ contribution.
   uptime formula before stating the gap as a rigorous compliance finding.
 - Whether to attempt outreach to Paren for a data-sharing arrangement beyond published
   aggregates, or stay strictly public-data-only (current default: public-only).
-- OpenChargeMap is blocked specifically from Cowork's sandboxed fetch tool (confirmed
-  twice now, 2026-07-19). Next attempt should be from local Claude Code CLI (normal
-  laptop network) or a Chrome browser connected to this account — not another retry
-  from Cowork's `web_fetch`. **Instructions for that attempt are written and saved at
-  `docs/ocm-pull-instructions.md`** (2026-07-19) — paste into a local Claude Code
-  session rather than re-deriving the approach. Covers: diagnostic-first network check,
-  API key handling, re-deriving the NEVI station+coordinate list if
-  `nevi_stations_clean.csv` isn't found locally (and committing it this time), the
-  0.5-mile matching threshold against AFDC coordinates, and a mandatory 5-station
-  manual spot-check before trusting any match.
+- **Resolved 2026-07-20:** OpenChargeMap pull is unblocked and complete (registered API
+  key + `docs/ocm-pull-instructions.md` Steps 0–5 run end-to-end from local Claude Code
+  CLI; see Progress log above). **New open decision in its place:** OCM returned zero
+  fault-report comments across all 216 NEVI stations and near-zero comments generally
+  (176/182 matched stations have none). Decide whether to (a) keep OCM out of the
+  prototype's active signal set entirely since it has nothing to contribute, (b) cite
+  the near-total silence itself as a minor supporting data point (e.g. "even the one
+  open crowdsourced channel available shows negligible community reporting at NEVI
+  sites"), or (c) revisit later once more OCM community activity may exist. Current
+  lean: (b), briefly, rather than building any prototype view around it — but not yet
+  decided.
 - Register a real (non-DEMO_KEY) AFDC/NLR API key at developer.nlr.gov/signup for
   ongoing use, rather than relying on the public rate-limited key.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-
