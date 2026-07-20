@@ -462,6 +462,45 @@ contribution.
   Custom HTML block — unblocked now that the production URL exists, but not yet
   produced or pasted in. See Open decisions below.
 
+## Progress log — 2026-07-20 (Cowork session — article + campaign plan drafted, project reframed)
+
+- **Reframing decided:** after the coverage-of-state-fleet check below undercut the original
+  "here's the gap" framing, and a fresh credibility assessment found the project weak on both
+  industry cut-through and AI/ML/agentic demonstration, the project was explicitly reframed
+  around the honest, smaller claim: NEVI's 97% self-report requirement survived the 2025
+  funding freeze and litigation unchanged, and adequate public data doesn't exist to verify it
+  at the station level for most states. AI/ML/agentic demonstration was ruled out as a goal for
+  this project specifically — it was scoped away from that on day one (see the early "New
+  session" status-check finding) for good positioning reasons, and none of the three signals
+  tried (staleness correlation, OCM, AFDC flapping) changed that. If AI/ML demonstration is
+  still wanted, it needs a separate project.
+- **[FACT] NEVI regulatory context updated and verified** — CLAUDE.md's prior "why now" framing
+  (2023 Federal Register final rule) was incomplete. Verified via web search: FHWA froze ~$2.74B
+  in unobligated NEVI funds in Feb 2025, a June 2025 court order forced a partial restart, FHWA
+  issued Interim Final Guidance Aug 11/13 2025 (loosened siting/certification rules but left
+  uptime, EV-ChART reporting, and all other technical standards unchanged), and a Jan 23 2026
+  summary judgment ruled the original freeze unlawful. $885M FY26 funds apportioned; a
+  House-passed FY26 budget resolution also proposes ~$500M in cuts. Full citations in the
+  article's References section.
+- **Article drafted**: `article/nevi-uptime-audit-article.md`. Structure and voice modeled
+  directly on the two existing jamesaksanders.com portfolio pieces (exec summary up front,
+  methodology sections, results reported plainly including negative/null results, future work,
+  numbered references) — fetched and read both in full before drafting. Includes an explicit
+  AI-collaboration credit line, matching the collaborator-credit convention in the source
+  pieces. All citations (Liu et al. DOI, Rempel et al. Human Factors DOI, ChargerHelp report
+  URL, Paren report URL, Beyond Uptime arXiv ID, FHWA IFG PDF) verified to resolve via direct
+  fetch/search before inclusion.
+- **Campaign plan drafted**: `article/nevi-campaign-plan.md`. Sets realistic expectations
+  (credibility over reach), segments the audience into three groups per the earlier fresh
+  assessment (policy/EV journalists — best fit; NEVI compliance staff — well served by the
+  reframed claim; charging-network reliability engineers — hardest fit, methodology-only pitch)
+  with a pre-publish checklist, channel-by-channel tactics (personal site, LinkedIn, a direct
+  pitch to Atlas EV Hub — found during research to cover NEVI guidance closely — and courtesy
+  outreach to ChargerHelp/Paren as cited sources), and honest success metrics.
+- **Not yet done**: user review/edit of both drafts, running the pre-publish checklist items
+  (prototype coverage-ratio caveat, OCM framing decision, link resolution spot-check, prototype
+  URL reconfirmation), actually publishing.
+
 ## Progress log — 2026-07-20 (Cowork session — NEVI coverage-of-state-fleet check)
 
 - **New methodological question raised, partially answered: what fraction of each
