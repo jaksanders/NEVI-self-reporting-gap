@@ -334,6 +334,71 @@ contribution.
   if a future session sees an unexpected-looking `git/trees` result right after a push,
   check raw file content before concluding the push failed.
 
+## Progress log — 2026-07-19 (local Claude Code CLI, v1 prototype build)
+
+- **Step 1 — Paren reliability chart read: succeeded, fully.** Unlike Cowork's
+  sandboxed fetch tool (`blocked-by-allowlist` on the CDN image), this laptop's normal
+  network reached the chart image directly (HTTP 200, valid 3750×1958 PNG) and Claude
+  read it multimodally. All 21 NEVI states are now chart- or text-confirmed — **zero
+  `unconfirmed` states remain**, including New York and Virginia, which earlier
+  sessions had flagged as having no prose figure at all (they do have inline chart
+  labels: NY 92.2, VA 94.3).
+- **Kansas discrepancy resolved:** report prose states 96.1; the chart's inline label
+  reads 96.0. Per project decision, prose is treated as authoritative (unambiguous text
+  extraction vs. visual label reading) — 96.1 is the figure used in the dataset.
+- **MD/DE/RI resolved via pixel-level line tracing, not assumption.** These three
+  (plus 6 non-NEVI Northeast states) are too small for inline labels; the chart uses
+  fan-out callout lines instead. Traced all 9 lines pixel-by-pixel from label back to
+  map shape (PowerShell + `System.Drawing`), confirmed **zero line crossings**
+  mathematically (origin-order matches label top-to-bottom order at every checkpoint
+  along the trace), then visually confirmed each of the three target states against its
+  actual shape at 4x zoom — Rhode Island is its own light-blue sliver between
+  Massachusetts and Connecticut; Delaware is its own peninsula rectangle; Maryland's
+  line lands on the mainland shape beside a small DC marker. Rhode Island's traced value
+  (90.3) exactly matched a value already independently given in the report's prose,
+  cross-validating the tracing method itself. Final: **MD 92.4, DE 94.2, RI 90.3** (RI
+  tagged `text_confirmed` since prose already had it; MD/DE tagged
+  `chart_confirmed_inferred_position` — a new confidence tier, distinct from a direct
+  inline read, added specifically to keep these two from looking as certain as the
+  other 19 states).
+- **Steps 2–3 — datasets built and validated.**
+  `data/paren_state_reliability_q2_2026.json` (21 states, full confidence-tier
+  metadata) and `data/nevi_paren_comparison.json` (joined against
+  `data/nevi_stations_current.csv`) — station-count sum validated at 216/216, exact
+  match to the CSV's own total.
+- **Step 4 — network-level view dropped from v1.** Already logged in full under Open
+  decisions below (two independent reasons: Paren's CPO leaderboard doesn't publish
+  reliability by network at all, and most NEVI networks have too few stations for a
+  meaningful per-network rate even if it did).
+- **Step 5 — methodology copy written.** `docs/prototype-methodology-copy.md`: the
+  NEVI-vs-Paren definitional side-by-side (time-based formula vs. session-outcome
+  composite, framed as directional, not a computed gap) plus a short paragraph
+  explaining the three confidence tiers, since the frontend surfaces asterisks/daggers
+  on some states that need explaining rather than being unexplained marks.
+- **Step 6 — frontend built.** `/prototype` (plain HTML/CSS/JS, no build step, no
+  framework — separate directory from `/collector`): stat row; sortable state-by-state
+  table with a per-row meter bar (single sequential blue hue, deliberately not
+  status-colored red/orange, so the visualization doesn't imply a judgment the text
+  doesn't support) showing Paren's rate against a marked 97% NEVI line; confidence
+  badges (`†` text-confirmed, `*` inferred-position) wired directly into the table with
+  a legend explaining them; click-to-expand per-state detail; the Step 5 methodology
+  text inlined as a visible page section, not a footnote. Tested via a local headless
+  Chrome install (the Chrome extension wasn't connected this session) at desktop,
+  375px-mobile, and dark-mode widths — data loads, renders, and sorts correctly.
+  Click/expand interaction was traced by hand rather than live-clicked, since headless
+  screenshot mode can't simulate clicks without Puppeteer (not installed) — reviewed
+  and approved on that basis. **Follow-up, explicitly not a v1 blocker:** add
+  `aria-expanded` to the clickable table rows for screen readers.
+- **Step 7 — deploy method: Git-based Vercel dashboard import**, not the CLI (neither
+  Node.js nor the Vercel CLI is installed on this laptop; installing Node.js was
+  treated as a real system change worth asking about first rather than doing silently).
+  New Vercel project `nevi-prototype`, Root Directory `prototype`, Framework Preset
+  `Other`, no build command — imported from the same GitHub repo as `/collector`. The
+  first import build will be empty/fail until this commit lands, since `prototype/`
+  wasn't pushed yet at dashboard-import time; Vercel's Git integration auto-redeploys
+  on this push. **Production URL not yet recorded here — pending a small follow-up
+  commit once the dashboard import finishes building against this push.**
+
 ## Open decisions
 
 - **Updated 2026-07-19 (Cowork session):** Attempted to close this via Paren's public
@@ -385,6 +450,26 @@ contribution.
   sites"), or (c) revisit later once more OCM community activity may exist. Current
   lean: (b), briefly, rather than building any prototype view around it — but not yet
   decided.
+- **Resolved 2026-07-19 (local Claude Code CLI, prototype build Step 4):** Network-level
+  view dropped from v1 prototype, for two independent reasons checked separately per
+  `docs/prototype-build-instructions.md` Step 4. (a) Paren's public CPO/hardware
+  leaderboard (`paren.app/cpo-hardware-leaderboard`) does not publish reliability by
+  network at all — it shows station/port totals, monthly growth, 150+kW port counts,
+  and average price; reliability/uptime data isn't one of the listed metrics and full
+  dataset access requires "requesting a demo." (b) Even if it did, NEVI's own
+  per-network station counts (`data/nevi_stations_current.csv` grouped by `ev_network`)
+  are too thin for most networks to support a meaningful comparison: FCN 37, ChargePoint
+  Network 36, eVgo Network 35, Electrify America 29, Tesla 26, Kwik Charge 19 are large
+  enough to say something; the other 11 networks are single digits (Red E 8, Electric
+  Era 5, Jule 4, SWTCH 4, EV Connect 3, Non-Networked 2, Applegreen 2, Circle K 2, Rivian
+  Adventure 2, PowerUp 1, RaceTrac 1) — a 1- or 2-station "network reliability rate"
+  isn't a real signal. Either reason alone would justify dropping network-level from v1;
+  having both independently confirmed removes any ambiguity for a future session.
+  State-level (Steps 2–3) is the only comparison view in v1.
+- **Resolved 2026-07-19 (local Claude Code CLI, prototype build Steps 1–3):** The
+  "still open" MD/DE/NY/VA item two bullets up is closed. All 21 NEVI states are now
+  chart- or text-confirmed with zero `unconfirmed` entries — see the Progress log
+  above for the pixel-tracing method used on MD/DE/RI specifically.
 - Register a real (non-DEMO_KEY) AFDC/NLR API key at developer.nlr.gov/signup for
   ongoing use, rather than relying on the public rate-limited key.
 - Drafting the article's fixed front-matter (regulatory hook, positioning-against-

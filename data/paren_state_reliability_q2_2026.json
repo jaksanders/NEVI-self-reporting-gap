@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026",
+    "source_date": "2026-07-14",
+    "description": "Paren Q2 2026 US EV Fast Charging Report — Avg DCFC Reliability Rate by State, scoped to states with NEVI-funded stations (per data/nevi_stations_current.csv). Reliability rate is Paren's proprietary session-outcome composite (Appendix B), not a time-based uptime percentage — see docs/prototype-methodology-copy.md for definitions and why these are not directly comparable to NEVI's EV-ChART formula.",
+    "confidence_levels": {
+      "text_confirmed": "Exact figure stated in the report's prose text.",
+      "chart_confirmed": "Figure read directly from an inline label stamped on the state's own shape in the 'Avg DCFC Reliability Rate by State' chart image.",
+      "chart_confirmed_inferred_position": "State too small for an inline label; the chart uses a fan-out callout line instead. Figure obtained by pixel-tracing the line from its label back to the exact point where it meets a map shape, then visually confirming that shape's identity. Full 9-line trace (all Northeast small-state callouts) independently confirmed zero line crossings before assignment.",
+      "directional_only": "Report prose confirms a qualitative direction (e.g. 'crossed above 90') but no exact digit.",
+      "unconfirmed": "No figure available from either prose or chart; reliability_rate is null."
+    },
+    "known_discrepancy": "Kansas: report prose states 96.1; the chart's inline label reads 96.0. Prose is used as authoritative (unambiguous text extraction vs. visual label reading, per project decision 2026-07-20)."
+  },
+  "states": [
+    { "state": "AZ", "reliability_rate": 95.9, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "CA", "reliability_rate": 94.0, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "CO", "reliability_rate": 94.6, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "DE", "reliability_rate": 94.2, "confidence": "chart_confirmed_inferred_position", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "GA", "reliability_rate": 95.0, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "HI", "reliability_rate": 96.0, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "KS", "reliability_rate": 96.1, "confidence": "text_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "KY", "reliability_rate": 92.8, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "MD", "reliability_rate": 92.4, "confidence": "chart_confirmed_inferred_position", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "ME", "reliability_rate": 94.6, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "MI", "reliability_rate": 91.4, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "MN", "reliability_rate": 90.7, "confidence": "text_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "NM", "reliability_rate": 92.0, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "NY", "reliability_rate": 92.2, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "OH", "reliability_rate": 92.5, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "PA", "reliability_rate": 93.8, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "RI", "reliability_rate": 90.3, "confidence": "text_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "TX", "reliability_rate": 94.5, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "UT", "reliability_rate": 93.2, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "VA", "reliability_rate": 94.3, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" },
+    { "state": "WI", "reliability_rate": 93.9, "confidence": "chart_confirmed", "source": "https://www.paren.app/reports/us-ev-fast-charging-q2-2026", "source_date": "2026-07-14" }
+  ]
+}

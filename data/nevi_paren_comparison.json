@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "description": "State-by-state comparison of NEVI's flat 97% self-reported uptime requirement against Paren's independently measured Q2 2026 reliability rate, for the 216 NEVI-funded stations in data/nevi_stations_current.csv.",
+    "generated_from": [
+      "data/nevi_stations_current.csv",
+      "data/paren_state_reliability_q2_2026.json"
+    ],
+    "row_count_validation": {
+      "nevi_stations_current_csv_total": 216,
+      "comparison_dataset_station_sum": 216,
+      "match": true
+    },
+    "nevi_uptime_requirement_note": "97% is NEVI's flat national minimum (Federal Register final guidance), not a state-specific figure — it applies identically to every row here. It is time-based (uptime% = (total hours - downtime hours) / total hours x 100, per port, annual). Paren's reliability_rate is a differently-defined session-outcome composite (Appendix B) -- these are NOT apples-to-apples and should be presented as directional, not a converted gap. See docs/prototype-methodology-copy.md.",
+    "confidence_note": "paren_confidence distinguishes how each state's figure was obtained -- see data/paren_state_reliability_q2_2026.json _meta.confidence_levels for full definitions. chart_confirmed_inferred_position (MD, DE) and text_confirmed (KS, MN, RI) should be visually distinguished from chart_confirmed in any frontend display, not presented as uniformly certain."
+  },
+  "states": [
+    { "state": "AZ", "nevi_station_count": 1,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 95.9, "paren_confidence": "chart_confirmed" },
+    { "state": "CA", "nevi_station_count": 1,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 94.0, "paren_confidence": "chart_confirmed" },
+    { "state": "CO", "nevi_station_count": 13, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 94.6, "paren_confidence": "chart_confirmed" },
+    { "state": "DE", "nevi_station_count": 2,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 94.2, "paren_confidence": "chart_confirmed_inferred_position" },
+    { "state": "GA", "nevi_station_count": 1,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 95.0, "paren_confidence": "chart_confirmed" },
+    { "state": "HI", "nevi_station_count": 2,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 96.0, "paren_confidence": "chart_confirmed" },
+    { "state": "KS", "nevi_station_count": 3,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 96.1, "paren_confidence": "text_confirmed" },
+    { "state": "KY", "nevi_station_count": 20, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 92.8, "paren_confidence": "chart_confirmed" },
+    { "state": "MD", "nevi_station_count": 8,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 92.4, "paren_confidence": "chart_confirmed_inferred_position" },
+    { "state": "ME", "nevi_station_count": 8,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 94.6, "paren_confidence": "chart_confirmed" },
+    { "state": "MI", "nevi_station_count": 10, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 91.4, "paren_confidence": "chart_confirmed" },
+    { "state": "MN", "nevi_station_count": 7,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 90.7, "paren_confidence": "text_confirmed" },
+    { "state": "NM", "nevi_station_count": 8,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 92.0, "paren_confidence": "chart_confirmed" },
+    { "state": "NY", "nevi_station_count": 21, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 92.2, "paren_confidence": "chart_confirmed" },
+    { "state": "OH", "nevi_station_count": 22, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 92.5, "paren_confidence": "chart_confirmed" },
+    { "state": "PA", "nevi_station_count": 42, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 93.8, "paren_confidence": "chart_confirmed" },
+    { "state": "RI", "nevi_station_count": 6,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 90.3, "paren_confidence": "text_confirmed" },
+    { "state": "TX", "nevi_station_count": 14, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 94.5, "paren_confidence": "chart_confirmed" },
+    { "state": "UT", "nevi_station_count": 5,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 93.2, "paren_confidence": "chart_confirmed" },
+    { "state": "VA", "nevi_station_count": 2,  "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 94.3, "paren_confidence": "chart_confirmed" },
+    { "state": "WI", "nevi_station_count": 20, "nevi_required_uptime_pct": 97.0, "paren_reliability_rate": 93.9, "paren_confidence": "chart_confirmed" }
+  ]
+}

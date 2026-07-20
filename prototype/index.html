@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEVI Self-Reporting Gap — State-by-State</title>
+<meta name="description" content="NEVI's flat 97% self-reported uptime requirement, compared state-by-state against Paren's independently measured Q2 2026 reliability rate.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="viz-root">
+
+  <header class="page-header">
+    <h1>NEVI Self-Reporting Gap</h1>
+    <p class="dek">
+      NEVI-funded fast chargers must self-report <strong>97% average annual uptime</strong>
+      to keep federal funding, with no independent verification built into the program.
+      This table lines that flat requirement up, state by state, against Paren's
+      independently measured reliability rate for Q2 2026 — read the
+      <a href="#methodology">methodology</a> before treating the gap as precise.
+    </p>
+  </header>
+
+  <section class="stat-row" aria-label="Summary">
+    <div class="stat-tile">
+      <span class="stat-value" id="stat-stations">—</span>
+      <span class="stat-label">NEVI-funded stations</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value" id="stat-states">—</span>
+      <span class="stat-label">states covered</span>
+    </div>
+    <div class="stat-tile">
+      <span class="stat-value">97%</span>
+      <span class="stat-label">flat self-reported requirement</span>
+    </div>
+  </section>
+
+  <section class="table-section" aria-label="State-by-state comparison">
+    <div class="table-scroll">
+      <table id="comparison-table">
+        <thead>
+          <tr>
+            <th scope="col" data-sort="state" class="sortable">State</th>
+            <th scope="col" data-sort="nevi_station_count" class="sortable align-num">NEVI stations</th>
+            <th scope="col" class="align-num">Self-reported requirement</th>
+            <th scope="col" data-sort="paren_reliability_rate" class="sortable">Paren reliability (Q2 2026)</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- rows injected by app.js -->
+        </tbody>
+      </table>
+    </div>
+
+    <p class="confidence-legend">
+      <strong>Reading the reliability column:</strong>
+      unmarked = read directly from an inline label on Paren's chart.
+      <span class="badge">†</span> text-confirmed = exact figure stated in the report's prose.
+      <span class="badge">*</span> inferred position (Maryland, Delaware) = obtained by tracing a callout
+      line back to its state shape, since these states are too small for an inline label.
+      Details in <a href="#methodology">Methodology</a> below.
+    </p>
+  </section>
+
+  <section id="methodology" class="methodology">
+    <h2>Methodology &amp; caveats</h2>
+
+    <h3>Two differently-defined numbers, not one gap</h3>
+    <p>
+      This tool shows two numbers side by side for each state. They are
+      <strong>not measuring the same thing</strong>, and there is no clean way to convert
+      one into the other — so what follows is a directional comparison, not a computed
+      compliance gap.
+    </p>
+    <p>
+      <strong>NEVI's 97% requirement</strong> is a self-reported, time-based uptime
+      formula, set in federal guidance and submitted by station operators to FHWA via
+      EV-ChART:
+    </p>
+    <blockquote>
+      uptime% = (total hours − downtime hours) / total hours × 100, calculated per port,
+      with a 97% annual average minimum.
+    </blockquote>
+    <p>
+      <strong>Paren's reliability rate</strong> is an independently measured, but
+      structurally different, metric: a proprietary composite built from four
+      session-level outcomes — clean success, success-with-retry, failed attempt, and
+      downtime — not a percentage of clock time (see Paren's published Appendix B /
+      terminology definitions).
+    </p>
+    <p>
+      Because one is time-based and the other is outcome-based, a station or state could
+      plausibly satisfy NEVI's formula while still producing a meaningfully lower Paren
+      rate, or vice versa — the two aren't in the same unit. Read the comparison as
+      <em>“NEVI's self-reported claim, next to what an independently measured,
+      differently-defined metric suggests,”</em> not as proof of a specific
+      percentage-point gap.
+    </p>
+
+    <h3>Why the confidence label on some states</h3>
+    <p>
+      Not every state's Paren figure was obtained the same way, and the reliability of
+      the read varies accordingly — states are marked with one of three confidence tiers
+      rather than presented as uniformly certain:
+    </p>
+    <ul>
+      <li><strong>Text-confirmed</strong> (†) — the exact figure is stated directly in
+        the Q2 2026 report's prose.</li>
+      <li><strong>Chart-confirmed</strong> (unmarked) — the figure is stamped as an
+        inline label directly on the state's own shape in Paren's reliability map.</li>
+      <li><strong>Inferred position</strong> (*) — Maryland and Delaware are too small
+        for an inline label, so the chart uses a fan-out callout line instead; the
+        figure was obtained by tracing that line's exact pixel path back to the shape it
+        touches, with the full set of callout lines checked for crossings before
+        assignment.</li>
+    </ul>
+
+    <p class="source-line" id="source-line"><!-- injected by app.js --></p>
+  </section>
+
+  <footer class="page-footer">
+    <p>
+      Station data: NREL/AFDC (National Laboratory of the Rockies), filtered to
+      <code>funding_sources: NEVI</code>. Reliability data: Paren, <em>US EV Fast
+      Charging Report, Q2 2026</em>. Built as a companion to an article on the NEVI
+      self-reporting gap.
+    </p>
+  </footer>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
