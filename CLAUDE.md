@@ -336,10 +336,42 @@ contribution.
 
 ## Open decisions
 
-- Double-check the 4 medium-confidence Paren state readings (NY, MD, DE, VA) against
-  the source screenshot before publishing exact figures.
-- Reconcile Paren's reliability-rate methodology against NEVI's official EV-ChART
-  uptime formula before stating the gap as a rigorous compliance finding.
+- **Updated 2026-07-19 (Cowork session):** Attempted to close this via Paren's public
+  Q2 2026 report page (`paren.app/reports/us-ev-fast-charging-q2-2026`, published
+  2026-07-14) instead of re-reading the screenshot. Its prose is *not* JS-gated —
+  contradicts the earlier "JS-gated, couldn't scrape" finding; text fetched cleanly via
+  `web_fetch`. But the actual state-by-state figures live in an embedded chart image
+  ("Avg DCFC Reliability Rate by State"), and neither `bash`/curl (blocked by the
+  sandbox's proxy allowlist — same `blocked-by-allowlist` failure signature as the
+  OpenChargeMap block) nor `web_fetch` (returns empty body for binary image content)
+  can read chart pixel values. No Chrome browser is connected this session either.
+  **Partial result:** the report's text explicitly names Maryland and Delaware as two
+  of five states that "crossed above 90" reliability in Q2 2026 (up from below 90
+  previously) — directionally consistent with the existing screenshot-derived figures
+  for those two, though exact digits aren't stated in text. New York and Virginia get
+  no reliability figure in text at all (Virginia is mentioned only for utilization,
+  16.6%). **Still open:** exact MD/DE digits and both NY/VA figures need either the
+  original screenshot re-shared, or a Chrome browser connected to this account so a
+  future session can read the chart directly — same fix path already identified for
+  OpenChargeMap.
+- **Re-scoped 2026-07-19 (Cowork session):** "Reconcile Paren vs. EV-ChART" was
+  probably the wrong framing for this task — checked both formulas directly rather than
+  leaving it as an open TODO. [FACT, sourced] NEVI's EV-ChART uptime formula is public
+  and time-based: uptime% = (total hours − downtime hours) / total hours × 100, per
+  port, 97% annual minimum (Federal Register NEVI final guidance; driveelectric.gov
+  NEVI Q&A). [FACT, sourced] Paren's Reliability Index (per its own published Appendix
+  B / terminology definitions) is a different construct: a proprietary composite of
+  four session-level outcomes — clean success, success-with-retry, failed attempt, and
+  downtime — not a time-based uptime percentage. These don't share a unit, so there's
+  no clean conversion between them; producing one converted, apples-to-apples gap
+  number is probably not achievable — not because the analysis is incomplete, but
+  because the two metrics measure structurally different things by design. **New
+  scope:** drop the goal of a single converted gap percentage. The article's
+  methodology section instead states both definitions explicitly, side by side, and
+  treats the comparison as directional — NEVI's self-reported claim vs. what an
+  independently measured, differently defined metric suggests — rather than a precise
+  compliance-gap calculation. This is consistent with the project's epistemic
+  standards and is a stronger claim for this audience than false precision would be.
 - Whether to attempt outreach to Paren for a data-sharing arrangement beyond published
   aggregates, or stay strictly public-data-only (current default: public-only).
 - **Resolved 2026-07-20:** OpenChargeMap pull is unblocked and complete (registered API
